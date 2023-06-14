@@ -15,7 +15,7 @@ ME_URL = reverse('user:me')
 
 
 def create_user(**params):
-    return get_user_model().objects.create(**params)
+    return get_user_model().objects.create_user(**params)
 
 
 class PublicUserApiTests(TestCase):
@@ -62,22 +62,22 @@ class PublicUserApiTests(TestCase):
         ).exists()
         self.assertFalse(user_exists)
 
-    # def test_create_token_for_user(self):
-    #     user_details = {
-    #         'name': 'Test Name',
-    #         'email': 'test@example.com',
-    #         'password': 'test-user-password123',
-    #     }
-    #     create_user(**user_details)
+    def test_create_token_for_user(self):
+        user_details = {
+            'name': 'Test Name',
+            'email': 'test@example.com',
+            'password': 'test-user-password123',
+        }
+        create_user(**user_details)
 
-    #     payload = {
-    #         'email': user_details['email'],
-    #         'password': user_details['password'],
-    #     }
-    #     res = self.client.post(TOKEN_URL, payload)
+        payload = {
+            'email': user_details['email'],
+            'password': user_details['password'],
+        }
+        res = self.client.post(TOKEN_URL, payload)
 
-    #     self.assertIn('token', res.data)
-    #     self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertIn('token', res.data)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
 
     def test_create_token_bad_credentials(self):
         create_user(email='test@example.com', password='goodpass')
